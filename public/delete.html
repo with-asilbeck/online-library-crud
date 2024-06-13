@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete</title>
+</head>
+<body>
+    <h2>Search & Delete Books</h2>
+    <input type="text" id="searchInput" placeholder="Search by title">
+    <button id="searchButton">Search</button>
+    
+    <h2>All Books</h2>
+    <ul id="booksList"></ul>
+ 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+    const booksList = document.getElementById('booksList');
+    const searchInput = document.getElementById('searchInput');
+    const searchButton = document.getElementById('searchButton');
+
+    // Function to search for books
+    const searchBooks = async () => {
+        const searchTitle = searchInput.value.trim();
+        if (searchTitle === '') {
+            document.write('Cannot find books')
+        } else {
+            // If search input is not empty, fetch filtered books
+            const response = await fetch(`/api/books?title=${searchTitle}`);
+            const books = await response.json();
+            renderBooks(books);
+        }
+    };
+
+    // Event listener for search button click
+    searchButton.addEventListener('click', searchBooks);
+
+    // Function to render books
+    const renderBooks = (books) => {
+        booksList.innerHTML = '';
+        books.forEach(book => {
+            const li = document.createElement('li');
+            li.textContent = `${book.title} - ${book.author} - ${book.year} - ${book.comment}`;
+            const deleteButton = createDeleteButton(book._id);
+            li.appendChild(deleteButton);
+            booksList.appendChild(li);
+        });
+    };
+
+});
+
+    </script>
+</body>
+</html>

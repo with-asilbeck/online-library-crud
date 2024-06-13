@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create</title>
+</head>
+<body>
+
+    <h1>Create book</h1>
+  <ul id="books-list"></ul>
+  <form id="create-book-form">
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" required><br><br>
+    <label for="author">Author:</label>
+    <input type="text" id="author" name="author" required><br><br>
+    <label for="year">Year:</label>
+    <input type="text" id="year" name="year" required><br><br>
+    <label for="review">Review:</label>
+    <input type="text" id="review" name="review" required><br><br>
+    <button type="submit">Create Book</button>
+  </form>
+
+<script>
+    document.getElementById('create-book-form').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const title = document.getElementById('title').value;
+    const author = document.getElementById('author').value;
+    const year = document.getElementById('year').value;
+    const review = document.getElementById('review').value;
+
+    const response = await fetch('/books', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ title, author, year, review }),
+    });
+
+    if (response.ok) {
+      alert('Book created successfully!');
+    } else {
+      alert('Error creating book!');
+    }
+   });
+</script>
+
+<script src="../app.mjs"></script>
+</body>
+</html>

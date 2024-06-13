@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Book by ID</title>
+</head>
+<body>
+    <h1>Search Book by ID</h1>
+    
+    <form id="searchForm">
+        <label for="bookId">Enter Book ID:</label>
+        <input type="text" id="bookId" name="bookId" required>
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Results -->
+    <div id="searchResult"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchForm = document.getElementById('searchForm');
+            const searchResult = document.getElementById('searchResult');
+
+            // Function to search for a book by ID
+            const searchBookById = async (id) => {
+                try {
+                    const response = await fetch(`/api/books/${id}`);
+                    const book = await response.json();
+                    if (!book.message) {
+                        // Book found
+                        searchResult.innerHTML = `
+                            <p><strong>Title:</strong> ${book.title}</p>
+                            <p><strong>Author:</strong> ${book.author}</p>
+                            <p><strong>Year:</strong> ${book.year}</p>
+                        `;
+                    } else {
+                        // Book not found
+                        searchResult.innerHTML = `<p>${book.message}</p>`;
+                    }
+                } catch (error) {
+                    console.error('Error searching for book:', error);
+                    searchResult.innerHTML = '<p>Error searching for book. Please try again later.</p>';
+                }
+            };
+
+
+            searchForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const bookId = document.getElementById('bookId').value.trim();
+                if (bookId === '') {
+                    alert('Please enter a book ID to search');
+                    return;
+                }
+                searchBookById(bookId);
+            });
+        });
+    </script>
+</body>
+</html>
